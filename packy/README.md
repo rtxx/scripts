@@ -29,7 +29,7 @@ Packy is a simple AUR helper made with Bash. I made it to get more used to it. I
 
 Packy can search, download and check for updates for AUR packages. It's still a bit of work to install the package, but it's in line with what the [Arch Wiki](https://wiki.archlinux.org/title/System_maintenance#Be_careful_with_unofficial_packages) recommends.
 
-Packy can check for updates to all installed AUR packages but ***cannot*** update them automatically. Maybe in the future, but to me, it's not a priority.
+Packy can check for updates for all installed AUR packages, but ***cannot*** update them automatically. Maybe in the future, but to me, it's not a priority, as I limit the use of AUR to a minimum.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
