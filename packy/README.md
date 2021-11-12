@@ -24,6 +24,8 @@
 
 ![](screenshot2)
 ![](screenshot1)
+![](screenshot3)
+![](screenshot4)
 
 Packy is a simple AUR helper made with Bash. I made it to get more used to it. It has alot of _badness_ but it works for me, and now I know a bit more because of it.
 
