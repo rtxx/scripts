@@ -25,11 +25,11 @@
 ![](screenshot2)
 ![](screenshot1)
 
-Packy is a simple AUR helper made with Bash. I made it to get more used to it. It has as lot of badness but it works for me, and now I know a bit more because of it.
+Packy is a simple AUR helper made with Bash. I made it to get more used to it. It has alot of _badness_ but it works for me, and now I know a bit more because of it.
 
-Packy can search, download and check for updates for AUR packages. Its still a bit of work to install the package, but its in line with what the [Arch Wiki](https://wiki.archlinux.org/title/System_maintenance#Be_careful_with_unofficial_packages/) recommends.
+Packy can search, download and check for updates for AUR packages. It's still a bit of work to install the package, but it's in line with what the [Arch Wiki] (https://wiki.archlinux.org/title/System_maintenance#Be_careful_with_unofficial_packages/) recommends.
 
-Packy can check for update to all installed AUR packages but ***cannot*** update them automatically. Maybe in the future, but to me, it's not a priority.
+Packy can check for updates to all installed AUR packages but ***cannot*** update them automatically. Maybe in the future, but to me, it's not a priority.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -38,7 +38,7 @@ Packy can check for update to all installed AUR packages but ***cannot*** update
 
 ### Prerequisites
 
-Packy only needs jq, to parse JSON from the AUR API.
+Packy only needs ```jq```, to parse JSON from the AUR API.
 * jq
   ```sh
   pacman -Syu jq
@@ -53,7 +53,7 @@ _Installing Packy is super simple. Because its only a script, you can run it any
    ```sh
    bash packy
    ```
-Make sure its inside a folder, so its easier to manage the downloaded packages.
+Make sure its inside a folder, so it's easier to manage the downloaded packages..
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
