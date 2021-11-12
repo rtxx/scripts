@@ -22,7 +22,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+![](screenshot1.png)
 
 Packy is a simple AUR helper made with Bash. I made it to get more used to bash. It has as lot of badness but it works for me, and now I know a bit more because of it.
 
