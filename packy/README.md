@@ -10,12 +10,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/rtxx/scripts/edit/main/packy">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
-
   <h3 align="center">Packy</h3>
-
   <p align="center">
     Simple AUR helper
     <br />
@@ -27,7 +22,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+![](screenshot1)
 
 Packy is a simple AUR helper made with Bash. I made it to get more used to bash. It has as lot of badness but it works for me, and now I know a bit more because of it.
 
