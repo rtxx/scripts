@@ -92,7 +92,7 @@ BOLD=$(echo -en '\033[1m')
 UNDERLINE=$(echo -en '\033[4')
 
 # check if dependencies are met
-dependencies=("util-linux" "jq" "nano")
+dependencies=("jq" "nano")
 for pkg in ${dependencies[@]}; do
   checkDependency=$(pacman -Q $pkg)
   exitStatus=$?
@@ -381,13 +381,13 @@ if [ "$downloadPkg" ]; then
 
     echo ::${BOLD} Checking for make dependencies...${RESTORE}
     makeDepends=$(echo $resultJSON | jq -jr '.results[] | "\(.MakeDepends[]) "')
-    checkInstalledPkgs=$(pacman -Q $makeDepends | sed 's/^/   /')
+    checkInstalledPkgs=$(pacman -Q $makeDepends)
     checkInstalledPkgsExitStatus=$?
     if [ "$checkInstalledPkgsExitStatus" -eq 0 ]; then
       echo ${GREEN}::${RESTORE}${BOLD} All make dependencies are present${RESTORE}
     else
       echo ${RED}::${RESTORE}${BOLD} Warning! Some dependencies needed for compiling are missing${RESTORE}
-      echo ${RED}::${RESTORE}${BOLD} makepkg maybe can install them, if not manually install them${RESTORE}
+      echo ${RED}::${RESTORE}${BOLD} makepkg maybe can install them, if not, manually install them${RESTORE}
     fi
 
     # gets name for pkg directory
