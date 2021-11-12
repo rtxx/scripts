@@ -295,7 +295,7 @@ if [ "$searchPkg" ]; then
       done
       # if it founds more than the maxResults variable, then it only outputs until the value
       if [[ "$nResult" -gt $maxResults ]]; then
-        echo ::${BOLD} Showing $maxResults results. Use -r, --maxresults to change it. ${RESTORE}
+        echo ::${BOLD} Showing $maxResults results. Use -r to change it. ${RESTORE}
       fi
       exit 0
     else
@@ -357,7 +357,7 @@ if [ "$searchPkg" ]; then
   done
 
   if [[ "$nResult" -gt $maxResults ]]; then
-    echo ::${BOLD} Showing $maxResults results. Use -r, --maxresults to change it. ${RESTORE}
+    echo ::${BOLD} Showing $maxResults results. Use -r to change it. ${RESTORE}
   fi
   exit 0
 fi
