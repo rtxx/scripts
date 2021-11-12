@@ -159,9 +159,10 @@ while [[ $# -gt 0 ]]; do
         S)  if [[ -z "$currentArgValue" ]]; then error_arg "$key" ; exit 2
             else pkgString="$currentArgValue" ; searchPkg=1 ; exactSearch=1 ; fi ;;
         # normal search, search for keyword
-        s)  if [[ -z "$currentArgValue" ]]; then echo error_arg "$key" ; exit 2
+        s)  exactSearch=0 ;;
+            #if [[ -z "$currentArgValue" ]]; then echo error_arg "$key" ; exit 2
             #elif [[ -z "$searchPkg" ]]; then  echo "${RED}::${RESTORE}${BOLD} $1 requires -S flag (use -h for help)${RESTORE}" ; exit 2
-            else exactSearch=0 ; fi ;; #pkgString="$currentArgValue" ; searchPkg=1 ;
+            #else exactSearch=0 ; fi ;; #pkgString="$currentArgValue" ; searchPkg=1 ;
         # search with 'search field'
         f)  if [[ -z "$currentArgValue" ]]; then echo error_arg "$key" ; exit 2
             else searchField="$currentArgValue" ; fi ; ;;
