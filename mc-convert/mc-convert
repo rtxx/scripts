@@ -1,0 +1,298 @@
+#!/bin/bash
+
+# color support, thanks https://gist.github.com/elucify/c7ccfee9f13b42f11f81
+RESTORE=$(echo -en '\033[0m')
+RED=$(echo -en '\033[00;31m')
+GREEN=$(echo -en '\033[00;32m')
+YELLOW=$(echo -en '\033[00;33m')
+BLUE=$(echo -en '\033[00;34m')
+MAGENTA=$(echo -en '\033[00;35m')
+PURPLE=$(echo -en '\033[00;35m')
+CYAN=$(echo -en '\033[00;36m')
+LIGHTGRAY=$(echo -en '\033[00;37m')
+LRED=$(echo -en '\033[01;31m')
+LGREEN=$(echo -en '\033[01;32m')
+LYELLOW=$(echo -en '\033[01;33m')
+LBLUE=$(echo -en '\033[01;34m')
+LMAGENTA=$(echo -en '\033[01;35m')
+LPURPLE=$(echo -en '\033[01;35m')
+LCYAN=$(echo -en '\033[01;36m')
+WHITE=$(echo -en '\033[01;37m')
+BOLD=$(echo -en '\033[1m')
+
+scriptName=$(basename $0)
+
+if [[ ! -f "./input-json" ]]; then
+  echo "${BOLD}:: Input file missing! It should be named 'input-json' and on the root dir.${RESTORE}"
+  exit 2
+fi
+
+function printHelp {
+cat << EOF
+   Usage: $scriptName [OPTIONS] [NUMBER]
+
+   Convert HTML from Prestashop product list to formatted HTML for Mailchimp code block.
+   Number range starts from 0
+   Note: Product list (JSON file) MUST have atleast 2 products or it will error out!
+
+   options :
+     -h, --help         show this help message and exit
+     -S,--single        convert a single product
+     -C,--column [i,n]  convert 2 products into a column, side by side
+
+   How to convert (example):
+      1 -> Go to "http://cv.asb-ie.com/299-material-de-higiene-e-protecao-covid-19"
+      2 -> Inspect the page and copy <ul id="product_list" .... >
+      3 -> Convert the result HTML into JSON, for example on "https://toolslick.com/conversion/data/html-to-json"
+      4 -> Copy the result JSON and add a file name input-json on the root folder, next to this script
+      5 -> run the script, bash $scriptName 'n', with 'n' being the product number. It starts on 0
+      6 -> Go to exported/ and copy the result code to mailchimp code block.
+
+EOF
+}
+
+if [[ -z "$1" ]]; then
+  printHelp
+  exit 0
+fi
+
+nProduct=""
+#loops the argument string until is done
+while [[ $# -gt 0 ]]; do
+  key="$1"
+  case "$key" in
+    -h|--help) printHelp=1 ;;
+    -S|--single) shift; nProduct="$1" ; singleFlag=1 ;;
+    -C|--column) shift; nProduct="$1" ; columnFlag=1 ;;
+    *) echo "${RED}:: Unknown option '$key'.${RESTORE}" ; printHelp ; exit 2 ;;
+  esac
+  shift
+done
+
+if [[ "$printHelp" ]]; then
+  printHelp
+  exit 0
+fi
+
+if [[ "$singleFlag" &&  "$columnFlag" ]]; then
+  echo ${RED}:: Single and column flags cant be used together, exiting...${RESTORE}
+  exit 2
+fi
+
+if [[ "$singleFlag" ]]; then
+  echo "${BOLD}:: Convert started [ Single Product ] ${RESTORE}"
+
+  # sed 's/@//' : remove all @, to better jq handling
+  # sed 's/null//' : some fields get null, so we remove them too
+  pageLink=$(cat ./input-json | sed 's/@//' | jq -r '.[].li['$nProduct'].a.href')
+  imgLink=$(cat ./input-json | sed 's/@//' | jq -r '.[].li['$nProduct'].a.img.src')
+  prodName=$(cat ./input-json | sed 's/@//' | jq -r '.[].li['$nProduct'].a.title')
+  prodDesc=$(cat ./input-json| sed 's/@//' | jq -r '.[].li['$nProduct'].div[].p.a.title' | sed 's/null//')
+  # remove '&nbsp;' from product description
+  prodDesc=$(echo $prodDesc | sed 's/\&nbsp;/ /g')
+  prodPrice=$(cat ./input-json | sed 's/#//' | jq -r '.[].li['$nProduct'].div[].span.text' | sed 's/null//')
+  # remove the '$' simbol at the front and puts it at the back
+  prodPrice=${prodPrice:2}"$"
+
+  echo
+  echo "-> Page Link: " ${BOLD}$pageLink${RESTORE} | sed 's/^/   /'
+  echo "-> Img  Link: " ${BOLD}$imgLink${RESTORE} | sed 's/^/   /'
+  echo "-> Prod Name: " ${BOLD}$prodName${RESTORE} | sed 's/^/   /'
+  echo "-> Prod Desc: " ${BOLD}$prodDesc${RESTORE} | sed 's/^/   /'
+  echo "-> Prod Price: "${BOLD} $prodPrice${RESTORE} | sed 's/^/   /'
+  echo
+
+  # remove all invalid chars for correct file name
+  fileName=$(echo $prodName | sed -e 's/[^A-Za-z0-9._-]/_/g')
+
+  if [[ ! -d "exported" ]]; then
+    echo ":: ${BOLD}'exported' folder not found, creating...${RESTORE}"
+    mkdir exported
+  fi
+cat << EOF > "exported/$nProduct-$fileName"
+<!-- Image -->
+<div class="mcnImage">
+  <center>
+    <table>
+      <a href="$pageLink" alt="$prodName">
+        <img src="$imgLink">
+      </a>
+    </table>
+  </center>
+</div>
+<!-- Text -->
+<div class="mcnTextContent">
+  <center>
+    <table>
+    <!-- Title -->
+	<h4 style="text-align:center;"> $prodName </b><br>
+    <!-- Description -->
+    <h5 style="text-align:center;font-weight:500;"> $prodDesc <br>
+    <!-- Price -->
+    <h4 style="text-align:center;font-weight:700;"> $prodPrice <br>
+    </table>
+  </center>
+</div>
+EOF
+
+cat << EOF > "exported/$nProduct-$fileName-plain"
+Page Link: $pageLink
+Img  Link: $imgLink
+Prod Name: $prodName
+Prod Desc: $prodDesc
+Prod Price: $prodPrice
+EOF
+
+  echo "${BOLD}:: Product number $nProduct '$prodName' converted and exported to exported/$fileName.${RESTORE}"
+  echo
+  exit 0
+fi
+
+if [[ "$columnFlag" ]]; then
+  # parse comma values into the variables
+  IFS=,
+  LIST=$nProduct
+  read nProduct nProduct2 <<<$LIST
+  if [[ -z "$nProduct" || -z "$nProduct2" ]]; then
+    echo "${BOLD}:: Check -C numbers, syntax is [ $scriptName -C i,n ], exiting... ${RESTORE}"
+    exit 2
+  fi
+
+  #echo $(($nProduct+1))
+  echo "${BOLD}:: Convert started [ Column 2 Products ] ${RESTORE}"
+
+  # sed 's/@//' : remove all @, to better jq handling
+  # sed 's/null//' : some fields get null, so we remove then to
+  pageLink1=$(cat ./input-json | sed 's/@//' | jq -r '.[].li['$nProduct'].a.href')
+  pageLink2=$(cat ./input-json | sed 's/@//' | jq -r '.[].li['$nProduct2'].a.href')
+
+  imgLink1=$(cat ./input-json | sed 's/@//' | jq -r '.[].li['$nProduct'].a.img.src')
+  imgLink2=$(cat ./input-json | sed 's/@//' | jq -r '.[].li['$nProduct2'].a.img.src')
+
+  prodName1=$(cat ./input-json | sed 's/@//' | jq -r '.[].li['$nProduct'].a.title')
+  prodName2=$(cat ./input-json | sed 's/@//' | jq -r '.[].li['$nProduct2'].a.title')
+
+  prodDesc1=$(cat ./input-json| sed 's/@//' | jq -r '.[].li['$nProduct'].div[].p.a.title' | sed 's/null//')
+  prodDesc2=$(cat ./input-json| sed 's/@//' | jq -r '.[].li['$nProduct2'].div[].p.a.title' | sed 's/null//')
+
+  # remove '&nbsp;' from product description
+  prodDesc1=$(echo $prodDesc1 | sed 's/\&nbsp;/ /g')
+  prodDesc2=$(echo $prodDesc2 | sed 's/\&nbsp;/ /g')
+
+  prodPrice1=$(cat ./input-json | sed 's/#//' | jq -r '.[].li['$nProduct'].div[].span.text' | sed 's/null//')
+  prodPrice2=$(cat ./input-json | sed 's/#//' | jq -r '.[].li['$nProduct2'].div[].span.text' | sed 's/null//')
+
+  # removes the '$' simbol at the front and puts it at the back
+  prodPrice1=${prodPrice1:2}"$"
+  prodPrice2=${prodPrice2:2}"$"
+
+
+  echo
+  echo ":: ${BOLD}Product 1${RESTORE}" | sed 's/^/   /'
+  echo "-> Page Link: " ${BOLD}$pageLink1${RESTORE} | sed 's/^/     /'
+  echo "-> Img  Link: " ${BOLD}$imgLink1${RESTORE} | sed 's/^/     /'
+  echo "-> Prod Name: " ${BOLD}$prodName1${RESTORE} | sed 's/^/     /'
+  echo "-> Prod Desc: " ${BOLD}$prodDesc1${RESTORE} | sed 's/^/     /'
+  echo "-> Prod Price: "${BOLD}$prodPrice1${RESTORE} | sed 's/^/     /'
+  echo
+  echo ":: ${BOLD}Product 2${RESTORE}" | sed 's/^/   /'
+  echo "-> Page Link: " ${BOLD}$pageLink2${RESTORE} | sed 's/^/     /'
+  echo "-> Img  Link: " ${BOLD}$imgLink2${RESTORE} | sed 's/^/     /'
+  echo "-> Prod Name: " ${BOLD}$prodName2${RESTORE} | sed 's/^/     /'
+  echo "-> Prod Desc: " ${BOLD}$prodDesc2${RESTORE} | sed 's/^/     /'
+  echo "-> Prod Price: "${BOLD}$prodPrice2${RESTORE} | sed 's/^/     /'
+  echo
+
+    # remove all invalid chars for correct file name
+  fileName1=$(echo $prodName1 | sed -e 's/[^A-Za-z0-9._-]/_/g')
+  fileName2=$(echo $prodName2 | sed -e 's/[^A-Za-z0-9._-]/_/g')
+
+  if [[ ! -d "exported" ]]; then
+    echo ":: ${BOLD}'exported' folder not found, creating...${RESTORE}"
+    mkdir exported
+  fi
+cat << EOF > "exported/$nProduct-$nProduct2-$fileName1-$fileName2"
+<!-- 2 Column Table -->
+<table width="100%" cellspacing="0" cellpadding="0" border="0" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+  <tbody>
+    <tr>
+      <td style="padding: 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" valign="top">
+        <table width="282" cellspacing="0" cellpadding="0" border="0" align="left" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+          <tbody>
+            <tr>
+              <!-- Product 1 Image -->
+              <td style="padding: 0 9px 9px 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" valign="top" align="center">
+                <a href="$pageLink1" title="" class="" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                <img alt="$prodName1" src="$imgLink1" style="max-width: 168px;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;vertical-align: bottom;" class="mcnImage" width="168">
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <!-- Product 1 Text -->
+              <td class="mcnTextContent" style="padding: 0 9px 0 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #202020;font-family: Helvetica;font-size: 16px;line-height: 150%;text-align: left;" width="282" valign="top">
+                <!-- Title -->
+                <div style="text-align: center;"><strong>$prodName1</strong></div>
+                  <!-- Description -->
+                  <div style="text-align: left;">
+                    $prodDesc1
+                    <br>
+                  </div>
+                <!-- Price -->
+                <div style="text-align: center;"><strong>$prodPrice1</strong></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <table width="282" cellspacing="0" cellpadding="0" border="0" align="right" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+          <tbody>
+            <tr>
+              <!-- Product 2 Image -->
+              <td style="padding: 0 9px 9px 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;" valign="top" align="center">
+                <a href="$pageLink2" title="" class="" target="_blank" style="mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
+                <img alt="$prodName2" src="$imgLink2" style="max-width: 168px;border: 0;height: auto;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;vertical-align: bottom;" class="mcnImage" width="168">
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <!-- Product 2 Text -->
+              <td class="mcnTextContent" style="padding: 0 9px 0 9px;mso-line-height-rule: exactly;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;word-break: break-word;color: #202020;font-family: Helvetica;font-size: 16px;line-height: 150%;text-align: left;" width="282" valign="top">
+                <!-- Title -->
+                <div style="text-align: center;"><strong>$prodName2</strong></div>
+                  <!-- Description -->
+                  <div style="text-align: left;">
+                    $prodDesc2
+                    <br>
+                  </div>
+                <!-- Price -->
+                <div style="text-align: center;"><strong>$prodPrice2</strong></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+  </tbody>
+</table>
+EOF
+
+cat << EOF > "exported/$nProduct-$nProduct2-$fileName1-$fileName2-plain"
+Product 1
+Page Link: $pageLink1
+Img  Link: $imgLink1
+Prod Name: $prodName1
+Prod Desc: $prodDesc1
+Prod Price: $prodPrice1
+Product 2
+Page Link: $pageLink2
+Img  Link: $imgLink2
+Prod Name: $prodName2
+Prod Desc: $prodDesc2
+Prod Price: $prodPrice2
+EOF
+
+  echo "${BOLD}:: Product number $nProduct '$prodName1' and  $nProduct2 '$prodName2' converted and exported to exported/$nProduct-$nProduct2-$fileName1-$fileName2.${RESTORE}"
+  echo
+
+  exit 0
+fi
+

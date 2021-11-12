@@ -1,0 +1,666 @@
+{
+  "ul": {
+    "@id": "product_list",
+    "@class": "clear",
+    "li": [
+      {
+        "@class": "ajax_block_product first_item item clearfix",
+        "a": {
+          "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5242-desinfetante-bactericida-fungicida-virucida-pronto-a-usar.html",
+          "@class": "product_img_link",
+          "@title": "Desinfetante ",
+          "img": {
+            "@src": "http://cv.asb-ie.com/5242-8787-home/desinfetante-bactericida-fungicida-virucida-pronto-a-usar.jpg",
+            "@alt": "Desinfetante Bactericida/ Fungicida/ Virucida 5lt",
+            "@width": "168",
+            "@height": "236"
+          }
+        },
+        "div": [
+          {
+            "@class": "center_block",
+            "div": {
+              "@class": "product_flags",
+              "span": {
+                "@class": "availability",
+                "#text": "Disponível"
+              }
+            },
+            "h3": {
+              "a": {
+                "@class": "product_link",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5242-desinfetante-bactericida-fungicida-virucida-pronto-a-usar.html",
+                "@title": "Desinfetante ",
+                "#text": "Desinfetante"
+              }
+            },
+            "p": {
+              "@class": "product_desc",
+              "a": {
+                "@class": "product_descr",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5242-desinfetante-bactericida-fungicida-virucida-pronto-a-usar.html",
+                "@title": "Bactericida/ Fungicida/ Virucida 5lt",
+                "#text": "Bactericida/ Fungicida/ Virucida 5lt"
+              }
+            }
+          },
+          {
+            "@class": "right_block",
+            "span": {
+              "@class": "price",
+              "#text": "$2,200.00"
+            },
+            "br": "",
+            "a": [
+              {
+                "@class": "ajax_add_to_cart_button exclusive",
+                "@rel": "ajax_id_product_5242",
+                "@href": "http://cv.asb-ie.com/cesto-compras?add&amp;id_product=5242&amp;token=2a07b99b27c025dbd47aeefdbec3e102",
+                "@title": "Comprar",
+                "#text": "Comprar"
+              },
+              {
+                "@class": "button",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5242-desinfetante-bactericida-fungicida-virucida-pronto-a-usar.html",
+                "@title": "Ver",
+                "#text": "Ver"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "@class": "ajax_block_product  alternate_item clearfix",
+        "a": {
+          "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5243-desinfetante-bactericida-fungicida-virucida-750ml.html",
+          "@class": "product_img_link",
+          "@title": "Desinfetante ",
+          "img": {
+            "@src": "http://cv.asb-ie.com/5243-8788-home/desinfetante-bactericida-fungicida-virucida-750ml.jpg",
+            "@alt": "Desinfetante Bactericida/ Fungicida/ Virucida 750ml",
+            "@width": "168",
+            "@height": "236"
+          }
+        },
+        "div": [
+          {
+            "@class": "center_block",
+            "div": {
+              "@class": "product_flags",
+              "span": {
+                "@class": "availability",
+                "#text": "Disponível"
+              }
+            },
+            "h3": {
+              "a": {
+                "@class": "product_link",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5243-desinfetante-bactericida-fungicida-virucida-750ml.html",
+                "@title": "Desinfetante ",
+                "#text": "Desinfetante"
+              }
+            },
+            "p": {
+              "@class": "product_desc",
+              "a": {
+                "@class": "product_descr",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5243-desinfetante-bactericida-fungicida-virucida-750ml.html",
+                "@title": "Bactericida/ Fungicida/ Virucida 750ml",
+                "#text": "Bactericida/ Fungicida/ Virucida 750ml"
+              }
+            }
+          },
+          {
+            "@class": "right_block",
+            "span": {
+              "@class": "price",
+              "#text": "$800.00"
+            },
+            "br": "",
+            "a": [
+              {
+                "@class": "ajax_add_to_cart_button exclusive",
+                "@rel": "ajax_id_product_5243",
+                "@href": "http://cv.asb-ie.com/cesto-compras?add&amp;id_product=5243&amp;token=2a07b99b27c025dbd47aeefdbec3e102",
+                "@title": "Comprar",
+                "#text": "Comprar"
+              },
+              {
+                "@class": "button",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5243-desinfetante-bactericida-fungicida-virucida-750ml.html",
+                "@title": "Ver",
+                "#text": "Ver"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "@class": "ajax_block_product  item clearfix",
+        "a": {
+          "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5235-gel-higienizante-desifetante-anti-septico-maos-1lt.html",
+          "@class": "product_img_link",
+          "@title": "Gel Higienizante/Desifetante ",
+          "img": {
+            "@src": "http://cv.asb-ie.com/5235-8779-home/gel-higienizante-desifetante-anti-septico-maos-1lt.jpg",
+            "@alt": "Gel Higienizante/Desifetante Anti-septico Maos 1LT",
+            "@width": "168",
+            "@height": "236"
+          }
+        },
+        "div": [
+          {
+            "@class": "center_block",
+            "div": {
+              "@class": "product_flags",
+              "span": {
+                "@class": "availability",
+                "#text": "Disponível"
+              }
+            },
+            "h3": {
+              "a": {
+                "@class": "product_link",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5235-gel-higienizante-desifetante-anti-septico-maos-1lt.html",
+                "@title": "Gel Higienizante/Desifetante ",
+                "#text": "Gel Higienizante/Desifetante"
+              }
+            },
+            "p": {
+              "@class": "product_desc",
+              "a": {
+                "@class": "product_descr",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5235-gel-higienizante-desifetante-anti-septico-maos-1lt.html",
+                "@title": "Anti-septico Maos 1LT",
+                "#text": "Anti-septico Maos 1LT"
+              }
+            }
+          },
+          {
+            "@class": "right_block",
+            "span": {
+              "@class": "price",
+              "#text": "$2,200.00"
+            },
+            "br": "",
+            "a": [
+              {
+                "@class": "ajax_add_to_cart_button exclusive",
+                "@rel": "ajax_id_product_5235",
+                "@href": "http://cv.asb-ie.com/cesto-compras?add&amp;id_product=5235&amp;token=2a07b99b27c025dbd47aeefdbec3e102",
+                "@title": "Comprar",
+                "#text": "Comprar"
+              },
+              {
+                "@class": "button",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5235-gel-higienizante-desifetante-anti-septico-maos-1lt.html",
+                "@title": "Ver",
+                "#text": "Ver"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "@class": "ajax_block_product  alternate_item clearfix",
+        "a": {
+          "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5236-gel-higienizante-desifetante-anti-septico-maos-1ooml.html",
+          "@class": "product_img_link",
+          "@title": "Gel Higienizante/Desifetante ",
+          "img": {
+            "@src": "http://cv.asb-ie.com/5236-8780-home/gel-higienizante-desifetante-anti-septico-maos-1ooml.jpg",
+            "@alt": "Gel Higienizante/Desifetante Anti-septico Maos 1ooml",
+            "@width": "168",
+            "@height": "236"
+          }
+        },
+        "div": [
+          {
+            "@class": "center_block",
+            "div": {
+              "@class": "product_flags",
+              "span": {
+                "@class": "availability",
+                "#text": "Disponível"
+              }
+            },
+            "h3": {
+              "a": {
+                "@class": "product_link",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5236-gel-higienizante-desifetante-anti-septico-maos-1ooml.html",
+                "@title": "Gel Higienizante/Desifetante ",
+                "#text": "Gel Higienizante/Desifetante"
+              }
+            },
+            "p": {
+              "@class": "product_desc",
+              "a": {
+                "@class": "product_descr",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5236-gel-higienizante-desifetante-anti-septico-maos-1ooml.html",
+                "@title": "Anti-septico Maos 100ml",
+                "#text": "Anti-septico Maos 100ml"
+              }
+            }
+          },
+          {
+            "@class": "right_block",
+            "span": {
+              "@class": "price",
+              "#text": "$730.00"
+            },
+            "br": "",
+            "a": [
+              {
+                "@class": "ajax_add_to_cart_button exclusive",
+                "@rel": "ajax_id_product_5236",
+                "@href": "http://cv.asb-ie.com/cesto-compras?add&amp;id_product=5236&amp;token=2a07b99b27c025dbd47aeefdbec3e102",
+                "@title": "Comprar",
+                "#text": "Comprar"
+              },
+              {
+                "@class": "button",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5236-gel-higienizante-desifetante-anti-septico-maos-1ooml.html",
+                "@title": "Ver",
+                "#text": "Ver"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "@class": "ajax_block_product  item clearfix",
+        "a": {
+          "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5244-mascara-descartavel-3-camadas-alta-protecao.html",
+          "@class": "product_img_link",
+          "@title": "Máscara cx 20 Unid.",
+          "img": {
+            "@src": "http://cv.asb-ie.com/5244-8789-home/mascara-descartavel-3-camadas-alta-protecao.jpg",
+            "@alt": "Máscara Descartável 3 Camadas Alta Proteção",
+            "@width": "168",
+            "@height": "236"
+          }
+        },
+        "div": [
+          {
+            "@class": "center_block",
+            "div": {
+              "@class": "product_flags",
+              "span": {
+                "@class": "availability",
+                "#text": "Disponível"
+              }
+            },
+            "h3": {
+              "a": {
+                "@class": "product_link",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5244-mascara-descartavel-3-camadas-alta-protecao.html",
+                "@title": "Máscara cx 20 Unid.",
+                "#text": "Máscara cx 20 Unid."
+              }
+            },
+            "p": {
+              "@class": "product_desc",
+              "a": {
+                "@class": "product_descr",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5244-mascara-descartavel-3-camadas-alta-protecao.html",
+                "@title": "Descartável 3 Camadas Alta Proteção",
+                "#text": "Descartável 3 Camadas Alta Proteção"
+              }
+            }
+          },
+          {
+            "@class": "right_block",
+            "span": {
+              "@class": "price",
+              "#text": "$500.00"
+            },
+            "br": "",
+            "a": [
+              {
+                "@class": "ajax_add_to_cart_button exclusive",
+                "@rel": "ajax_id_product_5244",
+                "@href": "http://cv.asb-ie.com/cesto-compras?add&amp;id_product=5244&amp;token=2a07b99b27c025dbd47aeefdbec3e102",
+                "@title": "Comprar",
+                "#text": "Comprar"
+              },
+              {
+                "@class": "button",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5244-mascara-descartavel-3-camadas-alta-protecao.html",
+                "@title": "Ver",
+                "#text": "Ver"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "@class": "ajax_block_product  alternate_item clearfix",
+        "a": {
+          "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5241-mascara-descartavel-ffp2-kn95.html",
+          "@class": "product_img_link",
+          "@title": "Máscara Descartável FFP2 /KN95",
+          "img": {
+            "@src": "http://cv.asb-ie.com/5241-8790-home/mascara-descartavel-ffp2-kn95.jpg",
+            "@alt": "Máscara Descartável FFP2 /KN95",
+            "@width": "168",
+            "@height": "236"
+          }
+        },
+        "div": [
+          {
+            "@class": "center_block",
+            "div": {
+              "@class": "product_flags",
+              "span": {
+                "@class": "availability",
+                "#text": "Disponível"
+              }
+            },
+            "h3": {
+              "a": {
+                "@class": "product_link",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5241-mascara-descartavel-ffp2-kn95.html",
+                "@title": "Máscara Descartável FFP2 /KN95",
+                "#text": "Máscara Descartável FFP2 /KN95"
+              }
+            },
+            "p": {
+              "@class": "product_desc",
+              "a": {
+                "@class": "product_descr",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5241-mascara-descartavel-ffp2-kn95.html",
+                "@title": ""
+              }
+            }
+          },
+          {
+            "@class": "right_block",
+            "span": {
+              "@class": "price",
+              "#text": "$170.00"
+            },
+            "br": "",
+            "a": [
+              {
+                "@class": "ajax_add_to_cart_button exclusive",
+                "@rel": "ajax_id_product_5241",
+                "@href": "http://cv.asb-ie.com/cesto-compras?add&amp;id_product=5241&amp;token=2a07b99b27c025dbd47aeefdbec3e102",
+                "@title": "Comprar",
+                "#text": "Comprar"
+              },
+              {
+                "@class": "button",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5241-mascara-descartavel-ffp2-kn95.html",
+                "@title": "Ver",
+                "#text": "Ver"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "@class": "ajax_block_product  item clearfix",
+        "a": {
+          "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5234-mascara-descartavel-3-camadas.html",
+          "@class": "product_img_link",
+          "@title": "Máscara Unid.",
+          "img": {
+            "@src": "http://cv.asb-ie.com/5234-8814-home/mascara-descartavel-3-camadas.jpg",
+            "@alt": "Máscara cx 1 Unid.",
+            "@width": "168",
+            "@height": "236"
+          }
+        },
+        "div": [
+          {
+            "@class": "center_block",
+            "div": {
+              "@class": "product_flags",
+              "span": {
+                "@class": "availability",
+                "#text": "Disponível"
+              }
+            },
+            "h3": {
+              "a": {
+                "@class": "product_link",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5234-mascara-descartavel-3-camadas.html",
+                "@title": "Máscara Unid.",
+                "#text": "Máscara Unid."
+              }
+            },
+            "p": {
+              "@class": "product_desc",
+              "a": {
+                "@class": "product_descr",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5234-mascara-descartavel-3-camadas.html",
+                "@title": "\n\nDescartável 3 Camadas Alta Proteção\n\n",
+                "#text": "Descartável 3 Camadas Alta Proteção"
+              }
+            }
+          },
+          {
+            "@class": "right_block",
+            "span": {
+              "@class": "price",
+              "#text": "$40.00"
+            },
+            "br": "",
+            "a": [
+              {
+                "@class": "ajax_add_to_cart_button exclusive",
+                "@rel": "ajax_id_product_5234",
+                "@href": "http://cv.asb-ie.com/cesto-compras?add&amp;id_product=5234&amp;token=2a07b99b27c025dbd47aeefdbec3e102",
+                "@title": "Comprar",
+                "#text": "Comprar"
+              },
+              {
+                "@class": "button",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5234-mascara-descartavel-3-camadas.html",
+                "@title": "Ver",
+                "#text": "Ver"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "@class": "ajax_block_product  alternate_item clearfix",
+        "a": {
+          "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5233-mascaras-kn-95-ffp2-c-filtro.html",
+          "@class": "product_img_link",
+          "@title": "Mascaras KN/95 FFP2 c/ filtro",
+          "img": {
+            "@src": "http://cv.asb-ie.com/5233-8777-home/mascaras-kn-95-ffp2-c-filtro.jpg",
+            "@alt": "Mascaras KN/95 FFP2 c/ filtro",
+            "@width": "168",
+            "@height": "236"
+          }
+        },
+        "div": [
+          {
+            "@class": "center_block",
+            "div": {
+              "@class": "product_flags",
+              "span": {
+                "@class": "availability",
+                "#text": "Disponível"
+              }
+            },
+            "h3": {
+              "a": {
+                "@class": "product_link",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5233-mascaras-kn-95-ffp2-c-filtro.html",
+                "@title": "Mascaras KN/95 FFP2 c/ filtro",
+                "#text": "Mascaras KN/95 FFP2 c/ filtro"
+              }
+            },
+            "p": {
+              "@class": "product_desc",
+              "a": {
+                "@class": "product_descr",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5233-mascaras-kn-95-ffp2-c-filtro.html",
+                "@title": ""
+              }
+            }
+          },
+          {
+            "@class": "right_block",
+            "span": {
+              "@class": "price",
+              "#text": "$750.00"
+            },
+            "br": "",
+            "a": [
+              {
+                "@class": "ajax_add_to_cart_button exclusive",
+                "@rel": "ajax_id_product_5233",
+                "@href": "http://cv.asb-ie.com/cesto-compras?add&amp;id_product=5233&amp;token=2a07b99b27c025dbd47aeefdbec3e102",
+                "@title": "Comprar",
+                "#text": "Comprar"
+              },
+              {
+                "@class": "button",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5233-mascaras-kn-95-ffp2-c-filtro.html",
+                "@title": "Ver",
+                "#text": "Ver"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "@class": "ajax_block_product  item clearfix",
+        "a": {
+          "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5231-painel-de-protecao-acrilico.html",
+          "@class": "product_img_link",
+          "@title": "Painel de Proteção Acrílico",
+          "img": {
+            "@src": "http://cv.asb-ie.com/5231-8775-home/painel-de-protecao-acrilico.jpg",
+            "@alt": "Painel de Proteção Acrílico",
+            "@width": "168",
+            "@height": "236"
+          }
+        },
+        "div": [
+          {
+            "@class": "center_block",
+            "div": {
+              "@class": "product_flags",
+              "span": {
+                "@class": "availability",
+                "#text": "Disponível"
+              }
+            },
+            "h3": {
+              "a": {
+                "@class": "product_link",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5231-painel-de-protecao-acrilico.html",
+                "@title": "Painel de Proteção Acrílico",
+                "#text": "Painel de Proteção Acrílico"
+              }
+            },
+            "p": {
+              "@class": "product_desc",
+              "a": {
+                "@class": "product_descr",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5231-painel-de-protecao-acrilico.html",
+                "@title": "Acrílico cristal de 4mm espessura dimensões 800mm altura 770mm largura com abertura de janela ao centro 350mm comprimento e 120mm altura com 2 pés de apoio",
+                "#text": "Acrílico cristal de 4mm espessura dimensões 800mm altura 770mm largura com abertura de janela ao centro 350mm comprimento e 120mm altura com 2 pés de apoio"
+              }
+            }
+          },
+          {
+            "@class": "right_block",
+            "span": {
+              "@class": "price",
+              "#text": "$15,000.00"
+            },
+            "br": "",
+            "a": [
+              {
+                "@class": "ajax_add_to_cart_button exclusive",
+                "@rel": "ajax_id_product_5231",
+                "@href": "http://cv.asb-ie.com/cesto-compras?add&amp;id_product=5231&amp;token=2a07b99b27c025dbd47aeefdbec3e102",
+                "@title": "Comprar",
+                "#text": "Comprar"
+              },
+              {
+                "@class": "button",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5231-painel-de-protecao-acrilico.html",
+                "@title": "Ver",
+                "#text": "Ver"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "@class": "ajax_block_product last_item alternate_item clearfix",
+        "a": {
+          "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5232-termometro-contactless-medicao-temperatura-corporal.html",
+          "@class": "product_img_link",
+          "@title": "Termómetro l",
+          "img": {
+            "@src": "http://cv.asb-ie.com/5232-8776-home/termometro-contactless-medicao-temperatura-corporal.jpg",
+            "@alt": "Termómetro contactless Medição Temperatura corporal",
+            "@width": "168",
+            "@height": "236"
+          }
+        },
+        "div": [
+          {
+            "@class": "center_block",
+            "div": {
+              "@class": "product_flags",
+              "span": {
+                "@class": "availability",
+                "#text": "Disponível"
+              }
+            },
+            "h3": {
+              "a": {
+                "@class": "product_link",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5232-termometro-contactless-medicao-temperatura-corporal.html",
+                "@title": "Termómetro l",
+                "#text": "Termómetro l"
+              }
+            },
+            "p": {
+              "@class": "product_desc",
+              "a": {
+                "@class": "product_descr",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5232-termometro-contactless-medicao-temperatura-corporal.html",
+                "@title": "contactless Medição Temperatura corpora",
+                "#text": "contactless Medição Temperatura corpora"
+              }
+            }
+          },
+          {
+            "@class": "right_block",
+            "span": {
+              "@class": "price",
+              "#text": "$9,900.00"
+            },
+            "br": "",
+            "a": [
+              {
+                "@class": "ajax_add_to_cart_button exclusive",
+                "@rel": "ajax_id_product_5232",
+                "@href": "http://cv.asb-ie.com/cesto-compras?add&amp;id_product=5232&amp;token=2a07b99b27c025dbd47aeefdbec3e102",
+                "@title": "Comprar",
+                "#text": "Comprar"
+              },
+              {
+                "@class": "button",
+                "@href": "http://cv.asb-ie.com/material-de-higiene-e-protecao-covid-19/5232-termometro-contactless-medicao-temperatura-corporal.html",
+                "@title": "Ver",
+                "#text": "Ver"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
