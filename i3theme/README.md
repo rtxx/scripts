@@ -10,9 +10,9 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <h3 align="center">Packy</h3>
+  <h3 align="center">i3theme</h3>
   <p align="center">
-    Simple AUR helper
+    Simple i3 theme changer
     <br />
   </p>
 </div>
@@ -21,17 +21,15 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
-![](screenshot2)
 ![](screenshot1)
+
+<!--
+![](screenshot2)
 ![](screenshot3)
 ![](screenshot4)
+-->
 
-Packy is a simple AUR helper made with Bash. I made it to get more used to it. It has alot of _badness_ but it works for me, and now I know a bit more because of it.
-
-Packy can search, download and check for updates for AUR packages. It's still a bit of work to install the package, but it's in line with what the [Arch Wiki](https://wiki.archlinux.org/title/System_maintenance#Be_careful_with_unofficial_packages) recommends.
-
-Packy can check for updates for all installed AUR packages, but ***cannot*** update them automatically. Maybe in the future, but to me, it's not a priority, as I limit the use of AUR to a minimum.
+i3theme is a simple script that changes i3 theme from a list of avaiable themes. It changes automatically i3 and i3status configs, Xresources, dunst, GTK and QT (not working atm).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -40,22 +38,23 @@ Packy can check for updates for all installed AUR packages, but ***cannot*** upd
 
 ### Prerequisites
 
-Packy only needs ```jq```, to parse JSON from the AUR API.
+i3themes needs ```xsettingsd jq feh```
+jq to parse the JSON theme file, xsettingsd for GTK themes and feh for the wallpaper
 * jq
   ```sh
-  pacman -Syu jq
+  pacman -Syu jq xsettingsd feh
   ```
 
 ### Installation
 
-_Installing Packy is super simple. Because its only a script, you can run it anywhere._
+_Installing i3theme is super simple. Because its only a script, you can run it anywhere._
 
-1. Download it [here](https://github.com/rtxx/scripts/blob/main/packy/packy)
+1. Download it [here](https://github.com/rtxx/scripts/tree/main/i3theme)
 2. Run it
    ```sh
-   bash packy
+   bash i3theme -t nord
    ```
-Make sure its inside a folder, so it's easier to manage the downloaded packages..
+Make sure its inside a folder with the directory 'themes', or else it wont work.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -64,23 +63,19 @@ Make sure its inside a folder, so it's easier to manage the downloaded packages.
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-Packy can be used to 
+i3theme can be used to 
 
-* Search
+* Change the theme
   ```sh
-  bash packy -S gwe
+  bash i3theme -t nord
   ```
-* Download
+* List avaiable themes
   ```sh
-  bash packy -Dx gwe
-  ```
-* and check for updates
-  ```sh
-  bash packy -U
-  ```
+  bash i3theme -l
+     ```
 * For more uses do
   ```sh
-  bash packy -h
+  bash i3theme -h
      ```
 <p align="right">(<a href="#top">back to top</a>)</p>
 
