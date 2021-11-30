@@ -21,7 +21,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-![](screenshot1)
+![](screenshot1.png)
 
 <!--
 ![](screenshot2)
