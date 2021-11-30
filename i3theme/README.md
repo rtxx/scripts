@@ -75,8 +75,8 @@ i3theme can be used to
   ```sh
   bash i3theme -h
      ```
-### Note
-* Please backup all the configs files before running. i3theme will change several files and overwrite your configuration.
+### Notes
+* Please backup all the configs files before running. Please inspect the script before running because it **will** change several files and overwrite your configuration.
 * For the script to work, i3 and i3status must have the following folder structure:
 ```
 i3
