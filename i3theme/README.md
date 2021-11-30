@@ -75,6 +75,21 @@ i3theme can be used to
   ```sh
   bash i3theme -h
      ```
+### Note
+* Please backup all the configs files before running. i3theme will change several files and overwrite your configuration.
+* For the script to work, i3 and i3status must have the following folder structure:
+```
+i3
+  | config.d
+    | theme.conf
+    | main.conf
+  | config
+  | makeconfig
+```
+``` makeconfig ``` _glues_ the ```main.conf``` and ```theme.conf``` and replaces ```config```. Same for i3status.
+Check my i3 personal repo for more information.
+* I personally use base16 based themes for i3 and i3status, so it needs more testing for other types of themes (I think is fine but YMMV).
+* rxvt wont update on the fly its colors, please use ```kitty``` or other terminal that supports it. Thereś also [urxvt-config-reload](https://github.com/regnarg/urxvt-config-reload) if you need it.
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
