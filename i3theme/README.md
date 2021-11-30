@@ -21,6 +21,7 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
+
 ![](screenshot1.png)
 
 <!--
@@ -47,17 +48,14 @@ jq to parse the JSON theme file, xsettingsd for GTK themes and feh for the wallp
 
 ### Installation
 
-_Installing i3theme is super simple. Because its only a script, you can run it anywhere._
-
 1. Download it [here](https://github.com/rtxx/scripts/tree/main/i3theme)
 2. Run it
    ```sh
-   bash i3theme -t nord
+   bash i3theme -h
    ```
 Make sure its inside a folder with the directory 'themes', or else it wont work.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
 
 
 <!-- USAGE EXAMPLES -->
