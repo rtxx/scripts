@@ -33,6 +33,10 @@ Packy can search, download and check for updates for AUR packages. It's still a 
 
 Packy can check for updates for all installed AUR packages, but ***cannot*** update them automatically. Maybe in the future, but to me, it's not a priority, as I limit the use of AUR to a minimum.
 
+Packy downloads and install missing dependencies (not packy but makepkg) but it ***cannot*** automatically install dependencies from AUR, meaning that we need to install them manually with packy -Dx. 
+
+Packy can ***only*** install 1 package at a time. Maybe in the future, but its a bit out of the scope of the script.
+
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- GETTING STARTED -->
