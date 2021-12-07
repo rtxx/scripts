@@ -27,6 +27,8 @@ themesDir=$scriptDir/themes
 xsettingsdConfigFile=~/.xsettingsd
 gtk3ConfigFile=~/.config/gtk-3.0/settings.ini
 gtk2ConfigFile=~/.gtkrc-2.0
+qtConfigFile=~/.config/qt5ct/qt5ct.conf
+
 # i3 dirs
 iThreeDir=~/.config/i3
 iThreeRemakeScript=~/.config/i3/makeconfig
@@ -198,6 +200,10 @@ if [ "$changeGTKThemeF" ]; then
   gtkCursorSize=$( echo $themeJSON | jq -r '.gtk["gtk-cursor-theme-size"]' )
   wallpapperTheme=$( echo $themeJSON | jq -r '.["wallpaper"]' )
 
+  # QT values from JSON
+  qtThemeName=$( echo $themeJSON | jq -r '.qt["style"]' )
+  qtColorSchemeName=$( echo $themeJSON | jq -r '.qt["color_scheme_path"]' )
+
   # if GTK theme exists
   if [[ -d "/usr/share/themes/$gtkThemeName" ]]; then
 
@@ -229,6 +235,14 @@ if [ "$changeGTKThemeF" ]; then
     # on the fly theme change for GTK apps, reloading xsettingsd
     killall -HUP xsettingsd
     echo "${GREEN}-->${RESTORE}${BOLD} xsettingsd reloaded ${RESTORE}" | sed 's/^/   /'
+    
+    # qt section
+    # TODO: change this
+    echo "${GREEN}::${RESTORE}${BOLD} Changing QT theme to '$changeGTKTheme' ${RESTORE}"
+    sed -i '/style/cstyle='"$qtThemeName"'' $qtConfigFile
+    sed -i '/color_scheme_path/ccolor_scheme_path='"$qtColorSchemeName"'' $qtConfigFile
+    echo "${GREEN}-->${RESTORE}${BOLD} $qtConfigFile changed ${RESTORE}" | sed 's/^/   /'
+
 
   else
     echo "${RED}::${RESTORE}${BOLD} $gtkThemeName is missing from /usr/share/themes ${RESTORE}"
@@ -239,7 +253,7 @@ if [ "$changeGTKThemeF" ]; then
     if [[ -e "$themesDir/$changeGTKTheme/$wallpapperTheme" ]]; then
       # change i3 main.conf so next login the wallpaper and lockscreen are correct
       sed -i '/set $wallpaper/cset $wallpaper "'"$themesDir/$changeGTKTheme/$wallpapperTheme"'"' $iThreeDir/config.d/main.conf
-      sed -i '/set $lockpaper/cset $lockpaper '"$themesDir/$changeGTKTheme/$wallpapperTheme"'' $iThreeDir/config.d/main.conf
+      #sed -i '/set $lockpaper/cset $lockpaper '"$themesDir/$changeGTKTheme/$wallpapperTheme"'' $iThreeDir/config.d/main.conf
       feh --bg-scale "$themesDir/$changeGTKTheme/$wallpapperTheme"
       echo "${GREEN}-->${RESTORE}${BOLD} wallpaper changed to '$wallpapperTheme' ${RESTORE}" | sed 's/^/   /'
     else
