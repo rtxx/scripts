@@ -30,7 +30,7 @@
 ![](screenshot4)
 -->
 
-i3theme is a simple script that changes i3 theme from a list of avaiable themes. It changes automatically i3 and i3status configs, Xresources, dunst, GTK and QT (not working atm).
+i3theme is a simple script that changes i3 theme from a list of avaiable themes. It changes automatically i3 and i3status configs, Xresources, dunst, GTK and QT.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
