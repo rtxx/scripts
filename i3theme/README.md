@@ -66,7 +66,7 @@ i3theme can be used to
 
 * Change the theme
   ```sh
-  bash i3theme -t nord
+  bash i3theme -a nord
   ```
 * List avaiable themes
   ```sh
