@@ -31,9 +31,9 @@ Packy is a simple AUR helper made with Bash. I made it to get more used to it. I
 
 Packy can search, download and check for updates for AUR packages. It's still a bit of work to install the package, but it's in line with what the [Arch Wiki](https://wiki.archlinux.org/title/System_maintenance#Be_careful_with_unofficial_packages) [recommends](https://wiki.archlinux.org/title/Arch_User_Repository#Installing_and_upgrading_packages).
 
-Packy can check for updates for all installed AUR packages, but ***cannot*** update them automatically. Maybe in the future, but to me, it's not a priority, as I limit the use of AUR to a minimum.
+Packy can check for updates for all installed AUR packages and update them automatically.
 
-Packy downloads and install missing dependencies (not packy but makepkg) but it ***cannot*** automatically install dependencies from AUR, meaning that we need to install them manually with packy -Dx. 
+Packy downloads and install missing make dependencies and dependencies.
 
 Packy can ***only*** install 1 package at a time. Maybe in the future, but its a bit out of the scope of the script.
 
@@ -44,10 +44,9 @@ Packy can ***only*** install 1 package at a time. Maybe in the future, but its a
 
 ### Prerequisites
 
-Packy only needs ```jq```, to parse JSON from the AUR API.
-* jq
+Packy needs ```sudo curl nano jq ```
   ```sh
-  pacman -Syu jq
+  pacman -Syu sudo curl nano jq
   ```
 
 ### Installation
@@ -70,17 +69,17 @@ Make sure its inside a folder, so it's easier to manage the downloaded packages.
 
 Packy can be used to 
 
-* Search
+* Install
   ```sh
   bash packy -S gwe
   ```
-* Download
-  ```sh
-  bash packy -Dx gwe
+  Search 'code' and limit the results to 25
   ```
-* and check for updates
+  bash packy -Ss code -r 25
+  ```
+* Check and install updates
   ```sh
-  bash packy -U
+  packy -U
   ```
 * For more uses do
   ```sh
