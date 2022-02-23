@@ -22,6 +22,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
+![](usage1.gif)
 ![](screenshot1.png)
 
 <!--
