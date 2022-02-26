@@ -723,6 +723,7 @@ installPkg() {
   makePkgExitStatus=$?
   # check if package is already built
   if [ "$makePkgExitStatus" -eq 13 ]; then
+    logMe 2 "Package '$pkgString' is already built."
     local whileTitleString="${YELLOW}::${RESTORE} ${BOLD}Package '$pkgString' is already built. Continue? [y/n] : ${RESTORE}"
     local whileErrorString="${RED}::${RESTORE} Error: Unknown option '$key'.${RESTORE}\n"
     printf "${whileTitleString}"
@@ -851,7 +852,7 @@ checkUpdates() {
 
     for ((i = 0 ; i < ${#pkgUpdates[@]} ; i++)); do
       local pkg=${pkgUpdates[$i]}
-      echo "${GREEN}${BOLD}::${RESTORE} Now installing '$pkg' [$(($i+1))/${#pkgUpdates[@]} ]${RESTORE}"
+      echo "${GREEN}${BOLD}::${RESTORE} Now installing '$pkg' [$(($i+1))/${#pkgUpdates[@]}]${RESTORE}"
       logMe 0 "Updating $pkg"
       installPkg $pkg 1
     done
