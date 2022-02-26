@@ -10,7 +10,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <h3 align="center">i3theme</h3>
+  <h3 align="center">sunset</h3>
   <p align="center">
     Simple theme changer
     <br />
