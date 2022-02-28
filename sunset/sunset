@@ -22,6 +22,8 @@ readonly PROGLOG="$PROGDIR/$PROGNAME.log"
 # activates log file
 readonly LOGTOFILE=1
 
+# TODO: replaces this global with another system
+# check if notification mensage is going to be displayed.
 warnNotification=0
 
 printHelp() {
@@ -104,6 +106,11 @@ exitCode() {
   exitCodeList[5]="[Error]: Dependency not installed: '$3'"
   exitCodeList[6]="[Error]: JSON not valid: '$3'"
 
+  # check if exit code is an error then send a notification
+  if [[ $1 -eq 3 || $1 -eq 4 || $1 -eq 5 || $1 -eq 6 ]]; then
+    warnNotification=2
+  fi
+
   # loops the exit code list
   for i in "${!exitCodeList[@]}"; do
     if [[ "$1" == "$i" ]]; then
@@ -115,6 +122,14 @@ exitCode() {
       local startTime=$(date --date "${PROGSTARTTIME}" -u +%s)
       local endTime=$(date --utc +%s)
       local elapsedTime=$(($endTime-$startTime))
+
+      if [[ ${warnNotification} -eq 1 ]]; then
+        notify-send -t 2000 "$PROGNAME" "Complete but with warnings, check log for more info."
+      elif [[ ${warnNotification} -eq 2 ]]; then
+        notify-send -t 2000 "$PROGNAME" "Error! Check log for more info."
+      else
+        notify-send -t 2000 "$PROGNAME" "Complete."
+      fi
 
       # logs description and type of exit code
       logMe 3 "${exitCodeList[${i}]} [${i}]"
@@ -498,13 +513,6 @@ main() {
     testFunction $testArg
   fi
 
-  if [[ ${warnNotification} -eq 1 ]]; then
-    notify-send -t 2000 "$PROGNAME" "Complete but with warnings, check log for more info."
-  elif [[ ${warnNotification} -eq 2 ]]; then
-     notify-send -t 2000 "$PROGNAME" "Error! Check log for more info."
-  else
-    notify-send -t 2000 "$PROGNAME" "Complete."
-  fi
   # if script reachs here, then it went without any errors, nice.
   logMe 0 "Complete." 1
   exitCode 0
@@ -538,7 +546,6 @@ verifyJSON() {
   if jq empty "$1" 2>/dev/null; then
     return 0
   else
-    logMe 1 "JSON error"
     return 1
   fi
 }

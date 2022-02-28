@@ -1,10 +1,14 @@
 #!/usr/bin/python
 # baby 1st python script
 # needs pip install pystray
+# needs pip install schedule
 
 import os
 import sys
 import json
+import schedule
+import time
+from threading import Thread
 import pystray
 from pystray import Icon as icon, Menu as menu, MenuItem as item
 from PIL import Image
@@ -12,9 +16,9 @@ from PIL import Image
 PROGDIR=os.path.dirname(os.path.realpath(__file__))
 PROGCONFIGDIR= PROGDIR + '/config'
 PROGCONFIGFILE= PROGCONFIGDIR + '/gui-config.json'
+PROGLOGFILE= PROGDIR + '/sunset.log'
 
-def lightTheme(_):
-
+def lightTheme():
   # loads config.json into f
   with open(PROGCONFIGFILE, 'r') as f:
     configs = json.load(f)
@@ -26,13 +30,11 @@ def lightTheme(_):
 
   # sends info to sunset
   os.system("bash "+ sunsetLocation + " " + lightThemeSetting  + " " + lightThemeName)
-  #os.system("notify-send -t 2000 'sunset' 'Light Theme: '" + lightThemeName)
 
   # closes config.json
   f.close()
 
-def darkTheme(_):
-
+def darkTheme():
   # loads config.json into f
   with open(PROGCONFIGFILE, 'r') as f:
     configs = json.load(f)
@@ -42,8 +44,8 @@ def darkTheme(_):
   darkThemeName = configs['darkTheme']
   darkThemeSetting = configs['darkThemeSetting']
 
+  # sends info to sunset
   os.system("bash "+ sunsetLocation + " " + darkThemeSetting + " " + darkThemeName)
-  #os.system("notify-send -t 2000 'sunset' 'Dark Theme: '" + darkThemeName)
 
   # closes config.json
   f.close()
@@ -51,19 +53,50 @@ def darkTheme(_):
 def editConfig():
   os.system("kitty nano " + PROGCONFIGFILE)
 
-def quit():
-  print('Quitting...')
-  exit()
+def openLog():
+  os.system("kitty nano " + PROGLOGFILE)
+
+def scheduleFunction():
+  while True:
+    schedule.run_pending()
+    time.sleep(1)
+
+def iconTrayFunction():
+  icon.run()
 
 def test():
-  print("yee")
+  now = datetime.now()
+  print(now)
 
-image = Image.open(PROGCONFIGDIR + "/icon.png")
-menu = (item('Light theme', lightTheme),
-        item('Dark Theme', darkTheme),
-        item('More...', menu(
-          item('Edit config',editConfig),
-          item('Exit',quit))))
+def quit():
+  print('Quitting...')
+  # https://stackoverflow.com/a/1489838
+  # exit and kill all threads
+  os._exit(1)
 
-icon = pystray.Icon("sunset", image, "sunset", menu)
-icon.run()
+if __name__ == "__main__":
+
+  image = Image.open(PROGCONFIGDIR + "/icon.png")
+  menu = (item('Light theme', lightTheme),
+          item('Dark Theme', darkTheme),
+          item('More...', menu(
+            item('Edit config',editConfig),
+            item('Open log',openLog),
+            item('Exit',quit))))
+
+  icon = pystray.Icon("sunset", image, "sunset", menu)
+
+  schedule.every().day.at("10:00").do(lightTheme)
+  schedule.every().day.at("18:00").do(darkTheme)
+
+  # creates threads
+  scheduleThread = Thread(target=scheduleFunction)
+  trayIconThread = Thread(target=iconTrayFunction)
+
+  # start threads
+  scheduleThread.start()
+  trayIconThread.start()
+
+  # wait for thread completion
+  scheduleThread.join()
+  trayIconThread.join()
