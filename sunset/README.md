@@ -23,6 +23,7 @@
 ## About The Project
 
 ![](usage1.gif)
+![](usage2.gif)
 ![](screenshot1.png)
 
 <!--
