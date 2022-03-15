@@ -22,11 +22,12 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
+![](screenshot1.png)
 ![](usage1.gif)
 ![](usage2.gif)
 
 <!--
-![](screenshot1.png)
+
 ![](screenshot2)
 ![](screenshot3)
 ![](screenshot4)
