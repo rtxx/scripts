@@ -22,8 +22,8 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-![](usage1.gif)
-![](usage2.gif)
+![](usage1.webm)
+![](usage2.webm)
 ![](screenshot1.png)
 
 <!--
