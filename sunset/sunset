@@ -283,6 +283,8 @@ while [[ $# -gt 0 ]]; do
         # wallpaper theme flag
         wallpaper) shift; applyWallpaperTheme="$currentArgValue" ; applyWallpaperThemeF=1 ;;
 
+        test) shift; testArg="$currentArgValue" ; testArgF=1 ;;
+
         *) exitCode 4 1 "${key}" ;;
       esac
       #shifts to the next argument
@@ -540,6 +542,31 @@ checkThemeDependencies() {
   done
 }
 
+testFunction(){
+
+  if [[ $XDG_CURRENT_DESKTOP = "XFCE" ]]; then
+    echo $XDG_CURRENT_DESKTOP
+    local applyGTKTheme=$1
+    # xsettingsd theme
+    xfconf-query -c xsettings -p /Net/ThemeName -s $applyGTKTheme
+    applyGTKThemeFunction $applyGTKTheme
+    # window manager theme
+    xfconf-query -c xfwm4 -p /general/theme -s Materia
+  # xfconf-query -c xsettings -p /Net/IconThemeName -s [theme-name]
+  # xfconf-query -c xsettings -p /Net/SoundThemeName -s [theme-name]
+
+    connectedOutputs=$(xrandr | awk '$2 == "connected"{print $1}')
+    activeOutput=$(xrandr | grep -E " connected (primary )?[1-9]+" | sed -e "s/\([A-Z0-9]\+\) connected.*/\1/")
+    xfceWorkspaceCount=$(xfconf-query -c xfwm4 -p /general/workspace_count)
+    for ((i = 0 ; i < $xfceWorkspaceCount  ; i++)); do
+      #xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor$activeOutput/workspace$i/color-style -s
+      #xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor$activeOutput/workspace$i/image-style -s
+      xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor$activeOutput/workspace$i/last-image -s /home/ruitx/Pictures/bigsur_day.jpg
+    done
+  fi
+
+}
+
 # checks if JSON files is valid
 # empty files will NOT error out
 verifyJSON() {
@@ -569,12 +596,29 @@ applyGTKThemeFunction() {
   gtkCursorNameQ='"'$gtkCursorName'"' # added quotation marks
   gtkCursorSize=$( echo $themeJSON | jq --raw-output '.gtk["gtk-cursor-theme-size"]' )
   gtkFontName=$( echo $themeJSON | jq --raw-output '.gtk["gtk-font-name"]' )
+  gtkMonoFontName=$( echo $themeJSON | jq --raw-output '.gtk["gtk-monospace-font-name"]' )
+
 
   # GTK theme section
   # check if JSON values are not empty
-  if [ "$gtkThemeName" ]; then
+  if [[ "$gtkThemeName" ]]; then
     # check if gtk theme is installed
     if [[ -e "/usr/share/themes/$gtkThemeName" || -e "$HOME/.themes/$gtkThemeName" ]]; then
+      # xfce support
+      if [[ $XDG_CURRENT_DESKTOP = "XFCE" ]]; then
+        xfconf-query --channel xsettings --property /Net/ThemeName --set "$gtkThemeName"
+
+        xfceThemeName=$( echo $themeJSON | jq --raw-output '.xfce["xfwm4-theme"]' )
+        if [[ "$xfceThemeName" ]]; then
+          if [[ ! "$xfceThemeName" = "null" ]]; then
+            xfconf-query --channel xfwm4 --property /general/theme --set $xfceThemeName
+          else
+            logMe 2 "Xfce window manager theme value is missing, ignoring..." 1
+          fi
+        else
+          logMe 2 "Xfce window manager theme value is empty, ignoring..." 1
+        fi
+      fi
       # xsettingsd
       sed --in-place '/Net\/ThemeName/cNet\/ThemeName '$gtkThemeNameQ'' $xsettingsdConfigFile
       # gtk 2.0
@@ -612,6 +656,10 @@ applyGTKThemeFunction() {
   if [ "$gtkIconName" ]; then
     # check if gtk icon theme is installed
     if [[ -e "/usr/share/icons/$gtkIconName" || -e "$HOME/.icons/$gtkIconName" ]]; then
+      # xfce support
+      if [[ $XDG_CURRENT_DESKTOP = "XFCE" ]]; then
+        xfconf-query --channel xsettings --property /Net/IconThemeName --set "$gtkIconName"
+      fi
       # xsettingsd
       sed --in-place '/Net\/IconThemeName/cNet\/IconThemeName '$gtkIconNameQ'' $xsettingsdConfigFile
       # gtk 2.0
@@ -647,6 +695,11 @@ applyGTKThemeFunction() {
 
   # GTK cursor theme section
   if [[ "$gtkCursorName" || "$gtkCursorSize" ]]; then
+    # xfce support
+    if [[ $XDG_CURRENT_DESKTOP = "XFCE" ]]; then
+      xfconf-query --channel xsettings --property /Gtk/CursorThemeName --set "$gtkCursorName"
+      xfconf-query --channel xsettings --property /Gtk/CursorThemeSize --set "$gtkCursorSize"
+    fi
     # xsettingsd
     sed --in-place '/Gtk\/CursorThemeName/cGtk\/CursorThemeName '$gtkCursorNameQ'' $xsettingsdConfigFile
     # gtk 2.0
@@ -660,13 +713,22 @@ applyGTKThemeFunction() {
   fi
 
   # GTK font section
-  if [ "$gtkFontName" ]; then
+  if [[ "$gtkFontName" ]]; then
+    # xfce support
+    if [[ $XDG_CURRENT_DESKTOP = "XFCE" ]]; then
+      xfconf-query --channel xsettings --property /Gtk/FontName --set "$gtkFontName"
+      if [[ "$gtkMonoFontName" ]]; then
+        xfconf-query --channel xsettings --property /Gtk/MonospaceFontName --set "$gtkMonoFontName"
+      else
+        logMe 2 "GTK mono font value is empty, ignoring..." 1
+      fi
+    fi
     # gtk 2.0
     sed --in-place '/gtk-font-name/cgtk-font-name='"$gtkFontName"'' $gtk2ConfigFile
      # gtk 3.0
     sed --in-place '/gtk-font-name/cgtk-font-name='"$gtkFontName"'' $gtk3ConfigFile
   else
-    logMe 2 "GTK font name value is empty, ignoring..." 1
+    logMe 2 "GTK font values are empty, ignoring..." 1
   fi
 
   # on the fly theme change for GTK apps, reloading xsettingsd
@@ -710,168 +772,136 @@ applyQtThemeFunction() {
 
 # apply i3 function
 applyI3ThemeFunction() {
-  logMe "i3 theme --> $applyI3Theme"
-  # printf with green color
-  printf "%-16s %-4s \e[32m%-16s\e[0m\n" "i3" "-->" "$applyI3Theme"
+  # only applies if current desktop is i3
+  if [[ $XDG_CURRENT_DESKTOP = "i3" ]]; then
+    logMe "i3 theme --> $applyI3Theme"
+    # printf with green color
+    printf "%-16s %-4s \e[32m%-16s\e[0m\n" "i3" "-->" "$applyI3Theme"
 
-  # get theme.config into a variable
-  themeJSON=$(cat $themesDir/$1/theme.config)
-  # theme to apply, which is going to be the argument passed
-  applyTheme=$1
-  # i3wm theme value from JSON
-  i3wmThemeName=$( echo $themeJSON | jq --raw-output '.i3wm["i3wm-theme"]' )
+    # get theme.config into a variable
+    themeJSON=$(cat $themesDir/$1/theme.config)
+    # theme to apply, which is going to be the argument passed
+    applyTheme=$1
+    # i3wm theme value from JSON
+    i3wmThemeName=$( echo $themeJSON | jq --raw-output '.i3wm["i3wm-theme"]' )
 
-  # i3status theme value from JSON
-  i3statusThemeName=$( echo $themeJSON | jq --raw-output '.i3status["i3status-theme"]' )
+    # i3status theme value from JSON
+    i3statusThemeName=$( echo $themeJSON | jq --raw-output '.i3status["i3status-theme"]' )
 
-  ### i3 updating section
-  if [ "$i3wmThemeName" ]; then
-    # check if i3 file exists
-    if [[ -e "$themesDir/$applyTheme/$i3wmThemeName" ]]; then
-      # check if there is a main.conf and a theme.conf
-      if [[ -e "$i3wmMainConfigFile" && -e "$i3wmThemeConfigFile"  ]]; then
-        # copy i3 theme file to i3 config.d dir
-        cp --force "$themesDir/$applyTheme/$i3wmThemeName" $i3wmThemeConfigFile
-        # removes old config
-        if [[ -f "$i3wmConfigFile" ]]; then rm $i3wmConfigFile; fi
-        # 'glues' main.conf and theme.conf into config
-        cat $i3wmMainConfigFile $i3wmThemeConfigFile > $i3wmConfigFile
-        # restart i3 to get the new theme
-        #i3-msg restart 1>/dev/null
+    ### i3 updating section
+    if [ "$i3wmThemeName" ]; then
+      # check if i3 file exists
+      if [[ -e "$themesDir/$applyTheme/$i3wmThemeName" ]]; then
+        # check if there is a main.conf and a theme.conf
+        if [[ -e "$i3wmMainConfigFile" && -e "$i3wmThemeConfigFile"  ]]; then
+          # copy i3 theme file to i3 config.d dir
+          cp --force "$themesDir/$applyTheme/$i3wmThemeName" $i3wmThemeConfigFile
+          # removes old config
+          if [[ -f "$i3wmConfigFile" ]]; then rm $i3wmConfigFile; fi
+          # 'glues' main.conf and theme.conf into config
+          cat $i3wmMainConfigFile $i3wmThemeConfigFile > $i3wmConfigFile
+          # restart i3 to get the new theme
+          #i3-msg restart 1>/dev/null
+        else
+          logMe 2 "i3wm theme not configurated: i3 main.conf or/and theme.conf does not exist, ignoring..." 1
+        fi
       else
-        logMe 2 "i3wm theme not configurated: i3 main.conf or/and theme.conf does not exist, ignoring..." 1
+        logMe 2 "i3 theme file '$i3wmThemeName' not found, ignoring..." 1
       fi
     else
-      logMe 2 "i3 theme file '$i3wmThemeName' not found, ignoring..." 1
+      logMe 2 "i3 theme value is empty, ignoring..." 1
     fi
-  else
-    logMe 2 "i3 theme value is empty, ignoring..." 1
-  fi
 
-  ### i3status updating section
-  if [ "$i3statusThemeName" ]; then
-    # check if i3status file exists
-    if [[ -e "$themesDir/$applyTheme/$i3statusThemeName" ]]; then
-      # check if there is a main.conf and a theme.conf
-      if [[ -e "$i3statusMainConfigFile" && -e "$i3statusThemeConfigFile"  ]]; then
-        # copy i3 theme file to i3 config.d dir
-        cp --force "$themesDir/$applyTheme/$i3statusThemeName" $i3statusThemeConfigFile
-        # removes old config
-        if [[ -f "$i3statusConfigFile" ]]; then rm $i3statusConfigFile; fi
-        # 'glues' main.conf and theme.conf into config
-        cat $i3statusThemeConfigFile $i3statusMainConfigFile > $i3statusConfigFile
-        # restart i3 to get the new theme
-        i3-msg restart 1>/dev/null
+    ### i3status updating section
+    if [ "$i3statusThemeName" ]; then
+      # check if i3status file exists
+      if [[ -e "$themesDir/$applyTheme/$i3statusThemeName" ]]; then
+        # check if there is a main.conf and a theme.conf
+        if [[ -e "$i3statusMainConfigFile" && -e "$i3statusThemeConfigFile"  ]]; then
+          # copy i3 theme file to i3 config.d dir
+          cp --force "$themesDir/$applyTheme/$i3statusThemeName" $i3statusThemeConfigFile
+          # removes old config
+          if [[ -f "$i3statusConfigFile" ]]; then rm $i3statusConfigFile; fi
+          # 'glues' main.conf and theme.conf into config
+          cat $i3statusThemeConfigFile $i3statusMainConfigFile > $i3statusConfigFile
+          # restart i3 to get the new theme
+          i3-msg restart 1>/dev/null
+        else
+          logMe 2 "i3status theme not configurated: i3status main.conf or/and theme.conf does not exist, ignoring..." 1
+        fi
       else
-        logMe 2 "i3status theme not configurated: i3status main.conf or/and theme.conf does not exist, ignoring..." 1
+        logMe 2 "i3status theme file '$i3statusThemeName' not found, ignoring..." 1
       fi
     else
-      logMe 2 "i3status theme file '$i3statusThemeName' not found, ignoring..." 1
+      logMe 2 "i3status theme value is empty, ignoring..." 1
     fi
-  else
-    logMe 2 "i3status theme value is empty, ignoring..." 1
   fi
 }
 
 # apply dunst function
 applyDunstThemeFunction() {
+  # only applies if dunst is running
+  checkDunst=$(pgrep dunst)
+  exitStatus=$?
+  if [ "$exitStatus" -eq 1 ]; then
+    logMe 1 "Dunst not running, ignoring...'"
+  else
+    logMe "dunst theme --> $applyDunstTheme"
+    # printf with green color
+    printf "%-16s %-4s \e[32m%-16s\e[0m\n" "dunst" "-->" "$applyDunstTheme"
 
-  logMe "dunst theme --> $applyDunstTheme"
-  # printf with green color
-  printf "%-16s %-4s \e[32m%-16s\e[0m\n" "dunst" "-->" "$applyDunstTheme"
+    # get theme.config into a variable
+    themeJSON=$(cat $themesDir/$1/theme.config)
+    # theme to apply, which is going to be the argument passed
+    applyTheme=$1
 
-  # get theme.config into a variable
-  themeJSON=$(cat $themesDir/$1/theme.config)
-  # theme to apply, which is going to be the argument passed
-  applyTheme=$1
+    # dunst theme value from JSON
+    dunstThemeName=$( echo $themeJSON | jq --raw-output '.dunst["dunst-theme"]' )
 
-  # dunst theme value from JSON
-  dunstThemeName=$( echo $themeJSON | jq --raw-output '.dunst["dunst-theme"]' )
-
-  if [[ "$dunstThemeName" ]]; then
-    if [[ "$dunstThemeName" == "auto" ]]; then
-      # if set to auto, get colors from Xresources
-      # note: for this to work, xresources theme MUST ALWAYS be changed 1st
-      colorBG=$(xrdb -query | grep "background" | awk '{print $2}')
-      colorFG=$(xrdb -query | grep "foreground" | awk '{print $2}')
-      color01=$(xrdb -query | grep "color1:" | awk '{print $2}')
-      color08=$(xrdb -query | grep "color8:" | awk '{print $2}')
-      # kills dunst, regen the config with new colors and runs it again
-      killall dunst
-      bash $gendunstFile -fw 0 \
-                         -ulb $colorBG -ulf $color08  \
-                         -unb $colorBG -unf $colorFG \
-                         -ucb $color01 -ucf $colorFG
-      (dunst 2>/dev/null &)
-    elif [[ "$dunstThemeName" == "manual" ]]; then
-      # if set to manual, get values from JSON
-      # if JSON value is 'null' gets default color from dunst default theme file
-      frameColor=$( echo $themeJSON | jq --raw-output '.dunst["frameColor"]' )
-      if [[ "$frameColor" == "null" ]]; then frameColor="#aaaaaa"; logMe 2 "'frameColor' is empty, getting default color..." 1 ; fi
-
-      frameWidth=$( echo $themeJSON | jq --raw-output '.dunst["frameWidth"]' )
-      if [[ "$frameWidth" == "null" ]]; then frameWidth="3"; logMe 2 "'frameWidth' is empty, getting default color..." 1 ; fi
-
-      separatorColor=$( echo $themeJSON | jq --raw-output '.dunst["separatorColor"]' )
-      if [[ "$separatorColor" == "null" ]]; then separatorColor="auto"; logMe 2 "'separatorColor' is empty, getting default color..." 1 ; fi
-
-      urgencyLowBkColor=$( echo $themeJSON | jq --raw-output '.dunst["urgencyLow-BackgroundColor"]' )
-      if [[ "$urgencyLowBkColor" == "null" ]]; then urgencyLowBkColor="#222222"; logMe 2 "'urgencyLow-BackgroundColor' is empty, getting default color..." 1 ; fi
-
-      urgencyLowFgColor=$( echo $themeJSON | jq --raw-output '.dunst["urgencyLow-ForegroundColor"]' )
-      if [[  "$urgencyLowFgColor" == "null" ]]; then urgencyLowFgColor="#888888"; logMe 2 "'urgencyLow-ForegroundColor' is empty, getting default color..." 1 ; fi
-
-      urgencyNormalBkColor=$( echo $themeJSON | jq --raw-output '.dunst["urgencyNormal-BackgroundColor"]' )
-      if [[ "$urgencyNormalBkColor" == "null" ]]; then urgencyNormalBkColor="#285577"; logMe 2 "'urgencyNormal-BackgroundColor' is empty, getting default color..." 1 ; fi
-
-      urgencyNormalFgColor=$( echo $themeJSON | jq --raw-output '.dunst["urgencyNormal-ForegroundColor"]' )
-      if [[ "$urgencyNormalFgColor" == "null" ]]; then urgencyNormalFgColor="#ffffff"; logMe 2 "'urgencyNormal-ForegroundColor' is empty, getting default color..." 1 ; fi
-
-      urgencyCriticalBkColor=$( echo $themeJSON | jq --raw-output '.dunst["urgencyCritical-BackgroundColor"]' )
-      if [[ "$urgencyCriticalBkColor" == "null" ]]; then urgencyCriticalBkColor="#900000"; logMe 2 "'urgencyCritical-BackgroundColor' is empty, getting default color..." 1 ; fi
-
-      urgencyCriticalFgColor=$( echo $themeJSON | jq --raw-output '.dunst["urgencyCritical-ForegroundColor"]' )
-      if [[ "$urgencyCriticalFgColor" == "null" ]]; then urgencyCriticalFgColor="#ffffff"; logMe 2 "'urgencyCritical-ForegroundColor' is empty, getting default color..." 1 ; fi
-
-      # kills dunst, regen the config with new colors and runs it again
-      killall dunst
-      bash $gendunstFile -fc $frameColor -fw $frameWidth -sc $separatorColor \
-                         -ulb $urgencyLowBkColor -ulf $urgencyLowFgColor \
-                         -unb $urgencyNormalBkColor -unf $urgencyNormalFgColor \
-                         -ucb $urgencyCriticalBkColor -ucf $urgencyCriticalFgColor
-      (dunst 2>/dev/null &)
-    else
-        # with full dunst theme
-#       # check if dunstrc file exists
-#       if [[ -e "$themesDir/$applyTheme/$dunstThemeName" ]]; then
-#         # copy dunst theme file to dunst config dir
-#         cp --force "$themesDir/$applyTheme/$dunstThemeName" $dunstConfigFile
-#         (dunst 2>/dev/null &)
-#       else
-#         logMe 2 "dunst theme file '$dunstThemeName' not found, ignoring..." 1
-#       fi
-
-
-      # check if dunstrc file exists
-      if [[ -e "$themesDir/$applyTheme/$dunstThemeName" ]]; then
-
-        # because base16 dunst themes are all with the same structure we can get the values from hard coded lines
-        # gets dunst theme, get n line, gets 3rd value, removes quotation marks
-        frameColor=$( cat "$themesDir/$applyTheme/$dunstThemeName" | sed -n '1p' | awk '{print $3}' | sed 's/^"\([^"]*\).*/\1/' )
-        separatorColor=$( cat "$themesDir/$applyTheme/$dunstThemeName" | sed -n '2p' | awk '{print $3}' | sed 's/^"\([^"]*\).*/\1/' )
+    if [[ "$dunstThemeName" ]]; then
+      if [[ "$dunstThemeName" == "auto" ]]; then
+        # if set to auto, get colors from Xresources
+        # note: for this to work, xresources theme MUST ALWAYS be changed 1st
+        colorBG=$(xrdb -query | grep "background" | awk '{print $2}')
+        colorFG=$(xrdb -query | grep "foreground" | awk '{print $2}')
+        color01=$(xrdb -query | grep "color1:" | awk '{print $2}')
+        color08=$(xrdb -query | grep "color8:" | awk '{print $2}')
+        # kills dunst, regen the config with new colors and runs it again
+        killall dunst
+        bash $gendunstFile -fw 0 \
+                          -ulb $colorBG -ulf $color08  \
+                          -unb $colorBG -unf $colorFG \
+                          -ucb $color01 -ucf $colorFG
+        (dunst 2>/dev/null &)
+      elif [[ "$dunstThemeName" == "manual" ]]; then
+        # if set to manual, get values from JSON
+        # if JSON value is 'null' gets default color from dunst default theme file
+        frameColor=$( echo $themeJSON | jq --raw-output '.dunst["frameColor"]' )
+        if [[ "$frameColor" == "null" ]]; then frameColor="#aaaaaa"; logMe 2 "'frameColor' is empty, getting default color..." 1 ; fi
 
         frameWidth=$( echo $themeJSON | jq --raw-output '.dunst["frameWidth"]' )
         if [[ "$frameWidth" == "null" ]]; then frameWidth="3"; logMe 2 "'frameWidth' is empty, getting default color..." 1 ; fi
 
-        urgencyLowBkColor=$( cat "$themesDir/$applyTheme/$dunstThemeName" | sed -n '6p' | awk '{print $3}' | sed 's/^"\([^"]*\).*/\1/' )
-        urgencyLowFgColor=$( cat "$themesDir/$applyTheme/$dunstThemeName" | sed -n '7p' | awk '{print $3}' | sed 's/^"\([^"]*\).*/\1/' )
+        separatorColor=$( echo $themeJSON | jq --raw-output '.dunst["separatorColor"]' )
+        if [[ "$separatorColor" == "null" ]]; then separatorColor="auto"; logMe 2 "'separatorColor' is empty, getting default color..." 1 ; fi
 
-        urgencyNormalBkColor=$( cat "$themesDir/$applyTheme/$dunstThemeName" | sed -n '11p' | awk '{print $3}' | sed 's/^"\([^"]*\).*/\1/' )
-        urgencyNormalFgColor=$( cat "$themesDir/$applyTheme/$dunstThemeName" | sed -n '12p' | awk '{print $3}' | sed 's/^"\([^"]*\).*/\1/' )
+        urgencyLowBkColor=$( echo $themeJSON | jq --raw-output '.dunst["urgencyLow-BackgroundColor"]' )
+        if [[ "$urgencyLowBkColor" == "null" ]]; then urgencyLowBkColor="#222222"; logMe 2 "'urgencyLow-BackgroundColor' is empty, getting default color..." 1 ; fi
 
-        urgencyCriticalBkColor=$( cat "$themesDir/$applyTheme/$dunstThemeName" | sed -n '16p' | awk '{print $3}' | sed 's/^"\([^"]*\).*/\1/' )
-        urgencyCriticalFgColor=$( cat "$themesDir/$applyTheme/$dunstThemeName" | sed -n '17p' | awk '{print $3}' | sed 's/^"\([^"]*\).*/\1/' )
+        urgencyLowFgColor=$( echo $themeJSON | jq --raw-output '.dunst["urgencyLow-ForegroundColor"]' )
+        if [[  "$urgencyLowFgColor" == "null" ]]; then urgencyLowFgColor="#888888"; logMe 2 "'urgencyLow-ForegroundColor' is empty, getting default color..." 1 ; fi
 
+        urgencyNormalBkColor=$( echo $themeJSON | jq --raw-output '.dunst["urgencyNormal-BackgroundColor"]' )
+        if [[ "$urgencyNormalBkColor" == "null" ]]; then urgencyNormalBkColor="#285577"; logMe 2 "'urgencyNormal-BackgroundColor' is empty, getting default color..." 1 ; fi
+
+        urgencyNormalFgColor=$( echo $themeJSON | jq --raw-output '.dunst["urgencyNormal-ForegroundColor"]' )
+        if [[ "$urgencyNormalFgColor" == "null" ]]; then urgencyNormalFgColor="#ffffff"; logMe 2 "'urgencyNormal-ForegroundColor' is empty, getting default color..." 1 ; fi
+
+        urgencyCriticalBkColor=$( echo $themeJSON | jq --raw-output '.dunst["urgencyCritical-BackgroundColor"]' )
+        if [[ "$urgencyCriticalBkColor" == "null" ]]; then urgencyCriticalBkColor="#900000"; logMe 2 "'urgencyCritical-BackgroundColor' is empty, getting default color..." 1 ; fi
+
+        urgencyCriticalFgColor=$( echo $themeJSON | jq --raw-output '.dunst["urgencyCritical-ForegroundColor"]' )
+        if [[ "$urgencyCriticalFgColor" == "null" ]]; then urgencyCriticalFgColor="#ffffff"; logMe 2 "'urgencyCritical-ForegroundColor' is empty, getting default color..." 1 ; fi
 
         # kills dunst, regen the config with new colors and runs it again
         killall dunst
@@ -879,19 +909,59 @@ applyDunstThemeFunction() {
                           -ulb $urgencyLowBkColor -ulf $urgencyLowFgColor \
                           -unb $urgencyNormalBkColor -unf $urgencyNormalFgColor \
                           -ucb $urgencyCriticalBkColor -ucf $urgencyCriticalFgColor
-
-
         (dunst 2>/dev/null &)
-
       else
-        logMe 2 "dunst theme file '$dunstThemeName' not found, ignoring..." 1
+          # with full dunst theme
+  #       # check if dunstrc file exists
+  #       if [[ -e "$themesDir/$applyTheme/$dunstThemeName" ]]; then
+  #         # copy dunst theme file to dunst config dir
+  #         cp --force "$themesDir/$applyTheme/$dunstThemeName" $dunstConfigFile
+  #         (dunst 2>/dev/null &)
+  #       else
+  #         logMe 2 "dunst theme file '$dunstThemeName' not found, ignoring..." 1
+  #       fi
+
+
+        # check if dunstrc file exists
+        if [[ -e "$themesDir/$applyTheme/$dunstThemeName" ]]; then
+
+          # because base16 dunst themes are all with the same structure we can get the values from hard coded lines
+          # gets dunst theme, get n line, gets 3rd value, removes quotation marks
+          frameColor=$( cat "$themesDir/$applyTheme/$dunstThemeName" | sed -n '1p' | awk '{print $3}' | sed 's/^"\([^"]*\).*/\1/' )
+          separatorColor=$( cat "$themesDir/$applyTheme/$dunstThemeName" | sed -n '2p' | awk '{print $3}' | sed 's/^"\([^"]*\).*/\1/' )
+
+          frameWidth=$( echo $themeJSON | jq --raw-output '.dunst["frameWidth"]' )
+          if [[ "$frameWidth" == "null" ]]; then frameWidth="3"; logMe 2 "'frameWidth' is empty, getting default color..." 1 ; fi
+
+          urgencyLowBkColor=$( cat "$themesDir/$applyTheme/$dunstThemeName" | sed -n '6p' | awk '{print $3}' | sed 's/^"\([^"]*\).*/\1/' )
+          urgencyLowFgColor=$( cat "$themesDir/$applyTheme/$dunstThemeName" | sed -n '7p' | awk '{print $3}' | sed 's/^"\([^"]*\).*/\1/' )
+
+          urgencyNormalBkColor=$( cat "$themesDir/$applyTheme/$dunstThemeName" | sed -n '11p' | awk '{print $3}' | sed 's/^"\([^"]*\).*/\1/' )
+          urgencyNormalFgColor=$( cat "$themesDir/$applyTheme/$dunstThemeName" | sed -n '12p' | awk '{print $3}' | sed 's/^"\([^"]*\).*/\1/' )
+
+          urgencyCriticalBkColor=$( cat "$themesDir/$applyTheme/$dunstThemeName" | sed -n '16p' | awk '{print $3}' | sed 's/^"\([^"]*\).*/\1/' )
+          urgencyCriticalFgColor=$( cat "$themesDir/$applyTheme/$dunstThemeName" | sed -n '17p' | awk '{print $3}' | sed 's/^"\([^"]*\).*/\1/' )
+
+
+          # kills dunst, regen the config with new colors and runs it again
+          killall dunst
+          bash $gendunstFile -fc $frameColor -fw $frameWidth -sc $separatorColor \
+                            -ulb $urgencyLowBkColor -ulf $urgencyLowFgColor \
+                            -unb $urgencyNormalBkColor -unf $urgencyNormalFgColor \
+                            -ucb $urgencyCriticalBkColor -ucf $urgencyCriticalFgColor
+
+
+          (dunst 2>/dev/null &)
+
+        else
+          logMe 2 "dunst theme file '$dunstThemeName' not found, ignoring..." 1
+        fi
+
       fi
-
+    else
+      logMe 2 "dunst theme value is empty, ignoring..." 1
     fi
-  else
-    logMe 2 "dunst theme value is empty, ignoring..." 1
   fi
-
 
 }
 
@@ -973,6 +1043,19 @@ applyWallpaperThemeFunction() {
   if [ "$wallpapperThemeName" ]; then
     # check if wallpaper file exists
     if [[ -e "$themesDir/$applyTheme/$wallpapperThemeName" ]]; then
+      # xfce support
+      if [[ $XDG_CURRENT_DESKTOP = "XFCE" ]]; then
+        #from https://wiki.archlinux.org/title/xrandr#Example_3
+        #connectedOutputs=$(xrandr | awk '$2 == "connected"{print $1}')
+        activeOutput=$(xrandr | grep -E " connected (primary )?[1-9]+" | sed -e "s/\([A-Z0-9]\+\) connected.*/\1/")
+        xfceWorkspaceCount=$(xfconf-query -c xfwm4 -p /general/workspace_count)
+        for ((i = 0 ; i < $xfceWorkspaceCount  ; i++)); do
+          #xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor$activeOutput/workspace$i/color-style -s
+          #xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor$activeOutput/workspace$i/image-style -s
+          xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor$activeOutput/workspace$i/last-image -s "$themesDir/$applyTheme/$wallpapperThemeName"
+        done
+      fi
+
       # check if there is a main.conf and a theme.conf
       if [[ -e "$i3wmMainConfigFile" && -e "$i3wmThemeConfigFile" && -e "$i3wmConfigFile"  ]]; then
         # sets new wallpaper with feh
@@ -1009,6 +1092,7 @@ cat << NEWTHEME > $themesDir/$1/theme.config
       "gtk-theme-name": "",
       "gtk-icon-theme-name": "",
       "gtk-font-name": "",
+      "gtk-monospace-font-name" : "",
       "gtk-cursor-theme-name": "",
       "gtk-cursor-theme-size": "0"
     },
@@ -1030,6 +1114,10 @@ cat << NEWTHEME > $themesDir/$1/theme.config
       "color_good": "",
       "color_bad": "",
       "color_degraded": ""
+    },
+  "xfce":
+    {
+      "xfwm4-theme": "",
     },
   "dunst":
     {
